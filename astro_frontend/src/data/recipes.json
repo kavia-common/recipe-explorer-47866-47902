@@ -1,0 +1,110 @@
+[
+  {
+    "id": "classic-pancakes",
+    "title": "Classic Pancakes",
+    "description": "Fluffy and light pancakes perfect for breakfast.",
+    "image": "https://images.unsplash.com/photo-1587734195503-904fca47e0e0?q=80&w=1200&auto=format&fit=crop",
+    "cuisine": "American",
+    "course": "Breakfast",
+    "timeMinutes": 20,
+    "difficulty": "Easy",
+    "tags": ["vegetarian", "quick", "kids"],
+    "ingredients": [
+      { "item": "All-purpose flour", "quantity": "1 1/2 cups" },
+      { "item": "Baking powder", "quantity": "3 1/2 tsp" },
+      { "item": "Milk", "quantity": "1 1/4 cups" },
+      { "item": "Egg", "quantity": "1" },
+      { "item": "Butter (melted)", "quantity": "3 tbsp" },
+      { "item": "Salt", "quantity": "1/2 tsp" },
+      { "item": "Sugar", "quantity": "1 tbsp" }
+    ],
+    "steps": [
+      "Whisk dry ingredients in a bowl.",
+      "Add milk, egg, and melted butter; mix until just combined.",
+      "Heat lightly oiled griddle. Pour batter and cook until bubbles form.",
+      "Flip and cook until golden. Serve warm."
+    ],
+    "servings": 4
+  },
+  {
+    "id": "lemon-garlic-salmon",
+    "title": "Lemon Garlic Salmon",
+    "description": "Pan-seared salmon with zesty lemon and garlic butter.",
+    "image": "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1200&auto=format&fit=crop",
+    "cuisine": "Mediterranean",
+    "course": "Dinner",
+    "timeMinutes": 25,
+    "difficulty": "Medium",
+    "tags": ["seafood", "gluten-free", "low-carb"],
+    "ingredients": [
+      { "item": "Salmon fillets", "quantity": "4" },
+      { "item": "Garlic", "quantity": "3 cloves, minced" },
+      { "item": "Lemon", "quantity": "1, juiced" },
+      { "item": "Butter", "quantity": "2 tbsp" },
+      { "item": "Olive oil", "quantity": "1 tbsp" },
+      { "item": "Salt & pepper" }
+    ],
+    "steps": [
+      "Season salmon with salt and pepper.",
+      "Sear in olive oil skin-side up until golden; flip.",
+      "Add butter and garlic; baste with lemon juice.",
+      "Cook to preferred doneness. Serve immediately."
+    ],
+    "servings": 4
+  },
+  {
+    "id": "veggie-buddha-bowl",
+    "title": "Veggie Buddha Bowl",
+    "description": "Colorful bowl with quinoa, roasted veggies, and tahini dressing.",
+    "image": "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1200&auto=format&fit=crop",
+    "cuisine": "Fusion",
+    "course": "Lunch",
+    "timeMinutes": 35,
+    "difficulty": "Easy",
+    "tags": ["vegan", "gluten-free", "healthy"],
+    "ingredients": [
+      { "item": "Quinoa", "quantity": "1 cup" },
+      { "item": "Chickpeas", "quantity": "1 can, drained" },
+      { "item": "Sweet potato", "quantity": "1, cubed" },
+      { "item": "Broccoli", "quantity": "1 head, florets" },
+      { "item": "Olive oil", "quantity": "2 tbsp" },
+      { "item": "Tahini", "quantity": "2 tbsp" },
+      { "item": "Lemon", "quantity": "1/2, juiced" },
+      { "item": "Salt & pepper" }
+    ],
+    "steps": [
+      "Roast sweet potatoes and broccoli with olive oil, salt, and pepper at 400°F (200°C) until tender.",
+      "Cook quinoa per package instructions.",
+      "Whisk tahini with lemon juice, water, and a pinch of salt to make a dressing.",
+      "Assemble bowls with quinoa, veggies, chickpeas, and drizzle dressing."
+    ],
+    "servings": 2
+  },
+  {
+    "id": "chocolate-mousse",
+    "title": "Silky Chocolate Mousse",
+    "description": "Rich and airy chocolate dessert topped with whipped cream.",
+    "image": "https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop",
+    "cuisine": "French",
+    "course": "Dessert",
+    "timeMinutes": 45,
+    "difficulty": "Medium",
+    "tags": ["vegetarian", "party"],
+    "ingredients": [
+      { "item": "Dark chocolate", "quantity": "200g" },
+      { "item": "Eggs", "quantity": "4, separated" },
+      { "item": "Sugar", "quantity": "2 tbsp" },
+      { "item": "Heavy cream", "quantity": "1/2 cup" },
+      { "item": "Vanilla extract", "quantity": "1 tsp" },
+      { "item": "Salt", "quantity": "pinch" }
+    ],
+    "steps": [
+      "Melt chocolate and cool slightly.",
+      "Whip cream to soft peaks.",
+      "Beat egg whites with sugar to stiff peaks.",
+      "Fold yolks into chocolate, then fold in cream and whites.",
+      "Chill until set."
+    ],
+    "servings": 4
+  }
+]

@@ -1,54 +1,189 @@
 ---
 import ThemeToggle from '../components/ThemeToggle.astro';
+
+// PUBLIC_INTERFACE
+export interface Props {
+  title?: string;
+}
+
+const { title = 'Recipe Explorer' } = Astro.props;
+const APP_NAME = 'Recipe Explorer';
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<ThemeToggle />
-		<slot />
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" role="banner">
+      <div class="container">
+        <a class="brand" href="/" aria-label={`${APP_NAME} home`}>
+          <span class="brand-mark" aria-hidden="true">🍳</span>
+          <span class="brand-text">{APP_NAME}</span>
+        </a>
+        <nav class="top-nav" aria-label="Primary">
+          <a href="/" class="nav-link">Home</a>
+          <a href="/about" class="nav-link" aria-disabled="true" tabindex="-1">About</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main" class="site-main" role="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <p>&copy; {new Date().getFullYear()} {APP_NAME}. Crafted with the Ocean Professional theme.</p>
+      </div>
+    </footer>
+
+    <ThemeToggle />
+  </body>
 </html>
 
 <style>
-	:root {
-		/* Light theme variables */
-		--bg-color: #ffffff;
-		--text-color: #111827;
-		--text-secondary: #4b5563;
-		--border-color: rgba(0, 0, 0, 0.1);
-		--card-bg: rgba(255, 255, 255, 1);
-		--card-hover-bg: rgba(255, 255, 255, 0.55);
-		--shadow-color: rgba(0, 0, 0, 0.1);
-		--shadow-hover-color: rgba(0, 0, 0, 0.15);
-	}
+  :root {
+    /* Ocean Professional Theme - Light */
+    --color-primary: #2563EB; /* blue-600 */
+    --color-primary-600: #2563EB;
+    --color-primary-700: #1D4ED8;
+    --color-secondary: #F59E0B; /* amber-500 */
+    --color-error: #EF4444;
+    --bg-color: #f9fafb; /* background */
+    --surface: #ffffff; /* cards/surfaces */
+    --text-color: #111827; /* gray-900 */
+    --text-secondary: #4b5563; /* gray-600 */
+    --border-color: rgba(17, 24, 39, 0.1);
+    --ring: 0 0 0 3px rgba(37, 99, 235, 0.35);
 
-	body.dark-theme {
-		/* Dark theme variables */
-		--bg-color: #111827;
-		--text-color: #f9fafb;
-		--text-secondary: #d1d5db;
-		--border-color: rgba(255, 255, 255, 0.2);
-		--card-bg: rgba(31, 41, 55, 0.9);
-		--card-hover-bg: rgba(31, 41, 55, 0.7);
-		--shadow-color: rgba(0, 0, 0, 0.3);
-		--shadow-hover-color: rgba(0, 0, 0, 0.4);
-	}
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
 
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-		background-color: var(--bg-color);
-		color: var(--text-color);
-		transition: background-color 0.3s ease, color 0.3s ease;
-	}
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+    --shadow-md: 0 6px 18px rgba(0,0,0,.08);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,.10);
+  }
+
+  body.dark-theme {
+    /* Ocean Professional Theme - Dark */
+    --bg-color: #0f172a; /* slate-900 */
+    --surface: #111827; /* gray-900 */
+    --text-color: #e5e7eb; /* gray-200 */
+    --text-secondary: #9ca3af; /* gray-400 */
+    --border-color: rgba(255, 255, 255, 0.12);
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.3);
+    --shadow-md: 0 6px 18px rgba(0,0,0,.35);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,.45);
+  }
+
+  html, body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color .3s ease, color .3s ease;
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    line-height: 1.5;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -1000px;
+    left: -1000px;
+  }
+  .skip-link:focus {
+    top: 8px;
+    left: 8px;
+    background: var(--surface);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--ring);
+    outline: none;
+  }
+
+  .site-header {
+    background: linear-gradient(180deg, rgba(37, 99, 235, .06), rgba(37,99,235,0));
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(8px);
+  }
+  .site-header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+  .brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(245,158,11,.15));
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+  }
+  .brand-text {
+    font-size: 1.05rem;
+  }
+  .top-nav .nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+  }
+  .top-nav .nav-link:hover {
+    color: var(--text-color);
+    background: rgba(37,99,235,.08);
+  }
+  .top-nav .nav-link[aria-disabled="true"] {
+    opacity: .45;
+    cursor: not-allowed;
+  }
+
+  .site-main {
+    min-height: calc(100vh - 160px);
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--border-color);
+    background: var(--surface);
+  }
+  .site-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px;
+    color: var(--text-secondary);
+    font-size: .95rem;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
 </style>

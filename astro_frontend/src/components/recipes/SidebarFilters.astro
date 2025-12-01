@@ -1,0 +1,147 @@
+---
+import { getAllRecipes, getAllFacets } from '../../utils/data';
+const facets = getAllFacets(getAllRecipes());
+---
+
+<div class="filters" role="region" aria-label="Filters">
+  <div class="card">
+    <h3 class="title">Filters</h3>
+
+    <fieldset>
+      <legend>Cuisine</legend>
+      <div class="chips">
+        {facets.cuisines.map((c) => <button type="button" class="chip" data-facet="cuisine" data-value={c}>{c}</button>)}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Course</legend>
+      <div class="chips">
+        {facets.courses.map((c) => <button type="button" class="chip" data-facet="course" data-value={c}>{c}</button>)}
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Difficulty</legend>
+      <div class="chips">
+        {facets.difficulties.map((d) => <button type="button" class="chip" data-facet="difficulty" data-value={d}>{d}</button>)}
+      </div>
+    </fieldset>
+
+    <details>
+      <summary>Tags</summary>
+      <div class="chips">
+        {facets.tags.map((t) => <button type="button" class="chip" data-facet="tag" data-value={t}>{t}</button>)}
+      </div>
+    </details>
+
+    <div class="actions">
+      <button type="button" class="btn-secondary" id="clear-filters">Clear</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .filters .card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .title {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+  }
+  fieldset {
+    border: 0;
+    margin: 8px 0;
+    padding: 0;
+  }
+  legend {
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+    background: rgba(37,99,235,.06);
+    cursor: pointer;
+  }
+  .chip.active {
+    background: linear-gradient(135deg, rgba(37,99,235,.9), rgba(37,99,235,.7));
+    color: white;
+    border-color: transparent;
+  }
+  details {
+    margin-top: 8px;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 8px;
+  }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+  .btn-secondary {
+    background: rgba(245,158,11,.15);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  const active = new Map();
+  function emit() {
+    const selected = Object.fromEntries(active);
+    document.dispatchEvent(new CustomEvent('recipe:filter', { detail: selected }));
+  }
+  function toggleChip(chip) {
+    const facet = chip.dataset.facet;
+    const value = chip.dataset.value;
+    const key = facet === 'tag' ? 'tags' : facet;
+    const current = active.get(key);
+
+    if (facet === 'tag') {
+      const set = new Set(current || []);
+      if (chip.classList.contains('active')) {
+        set.delete(value);
+      } else {
+        set.add(value);
+      }
+      if (set.size) active.set('tags', Array.from(set));
+      else active.delete('tags');
+    } else {
+      if (chip.classList.contains('active')) {
+        active.delete(key);
+      } else {
+        active.set(key, value);
+      }
+      // make others in same facet inactive
+      document.querySelectorAll(`.chip[data-facet="${facet}"]`).forEach(el => el.classList.remove('active'));
+    }
+
+    chip.classList.toggle('active');
+    emit();
+  }
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => toggleChip(chip));
+  });
+
+  document.getElementById('clear-filters')?.addEventListener('click', () => {
+    active.clear();
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    emit();
+  });
+</script>

@@ -1,0 +1,159 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getAllRecipes, getRecipeById } from '../../utils/data';
+
+export async function getStaticPaths() {
+  // PUBLIC_INTERFACE
+  /** Generate static paths for all mock recipes. */
+  const paths = getAllRecipes().map((r) => ({ params: { id: r.id } }));
+  return paths;
+}
+
+const { id } = Astro.params;
+const recipe = getRecipeById(id!);
+if (!recipe) {
+  return Astro.redirect('/', 302);
+}
+---
+
+<Layout title={`Recipe – ${recipe.title}`}>
+  <section class="container detail">
+    <nav aria-label="Breadcrumb" class="crumbs">
+      <a href="/" class="crumb">Home</a>
+      <span aria-hidden="true">/</span>
+      <span class="crumb current" aria-current="page">{recipe.title}</span>
+    </nav>
+
+    <article class="recipe">
+      <header class="header">
+        <div class="text">
+          <h1 class="title">{recipe.title}</h1>
+          <p class="desc">{recipe.description}</p>
+          <div class="badges">
+            <span class="pill">{recipe.cuisine}</span>
+            <span class="pill">{recipe.course}</span>
+            <span class="pill">{recipe.difficulty}</span>
+            <span class="pill">{recipe.timeMinutes} minutes</span>
+            <span class="pill">{recipe.servings} servings</span>
+          </div>
+        </div>
+        <div class="media">
+          <img src={recipe.image} alt="" />
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="card" aria-labelledby="ingredients-title">
+          <h2 id="ingredients-title">Ingredients</h2>
+          <ul class="ingredients">
+            {recipe.ingredients.map((ing) => (
+              <li>
+                <span class="ing-item">{ing.item}</span>
+                {ing.quantity && <span class="qty">{ing.quantity}</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="card" aria-labelledby="steps-title">
+          <h2 id="steps-title">Steps</h2>
+          <ol class="steps">
+            {recipe.steps.map((s) => <li>{s}</li>)}
+          </ol>
+        </section>
+      </div>
+    </article>
+  </section>
+</Layout>
+
+<style>
+  .crumbs {
+    margin: 16px 0 8px;
+    color: var(--text-secondary);
+    font-size: .95rem;
+  }
+  .crumb {
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .crumb:hover { text-decoration: underline; }
+  .crumb.current { color: var(--text-color); font-weight: 600; }
+
+  .recipe .header {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .recipe .title {
+    margin: 0 0 6px 0;
+    font-size: clamp(1.4rem, 2vw + 1rem, 2rem);
+  }
+  .recipe .desc {
+    margin: 0 0 10px 0;
+    color: var(--text-secondary);
+  }
+  .media img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    object-fit: cover;
+    aspect-ratio: 16/9;
+    display: block;
+  }
+  .badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pill {
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: .9rem;
+    background: rgba(37,99,235,.08);
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0 28px 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .ingredients {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .ingredients li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px dashed var(--border-color);
+    padding: 6px 0;
+  }
+  .qty {
+    color: var(--text-secondary);
+  }
+  .steps {
+    margin: 0;
+    padding-left: 20px;
+    display: grid;
+    gap: 10px;
+  }
+  @media (max-width: 960px) {
+    .recipe .header { grid-template-columns: 1fr; }
+    .content { grid-template-columns: 1fr; }
+  }
+</style>

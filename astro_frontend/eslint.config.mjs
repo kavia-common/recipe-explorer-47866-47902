@@ -4,6 +4,13 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 export default [
+  {
+    ignores: [
+      '.astro/**', // ignore Astro generated types that may violate lint rules
+      'dist/**'
+    ],
+  },
+
   js.configs.recommended,
 
   // TypeScript support

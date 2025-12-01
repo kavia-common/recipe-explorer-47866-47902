@@ -1,0 +1,161 @@
+---
+import RecipeCard from './RecipeCard.astro';
+import type { Recipe } from '../../utils/data';
+const { recipes } = Astro.props as { recipes: Recipe[] };
+---
+
+<section class="gridwrap" aria-live="polite">
+  <div class="toolbar" role="status" aria-live="polite">
+    <span id="count">Showing {recipes.length} recipes</span>
+    <div class="spacer"></div>
+    <label class="sort-label" for="sort">Sort:</label>
+    <select id="sort" class="sort">
+      <option value="relevance">Relevance</option>
+      <option value="time-asc">Time ↑</option>
+      <option value="time-desc">Time ↓</option>
+      <option value="title-asc">Title A–Z</option>
+      <option value="title-desc">Title Z–A</option>
+    </select>
+  </div>
+
+  <div id="grid" class="grid">
+    {recipes.map((r) => <RecipeCard recipe={r} />)}
+  </div>
+</section>
+
+<style>
+  .gridwrap {
+    display: grid;
+    gap: 12px;
+  }
+  .toolbar {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 8px 10px;
+    box-shadow: var(--shadow-sm);
+    color: var(--text-secondary);
+    font-size: .95rem;
+  }
+  .spacer { flex: 1; }
+  .sort {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: var(--radius-sm);
+    padding: 6px 8px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  @media (max-width: 1100px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script type="module">
+  import recipes from '../../data/recipes.json';
+
+  /** Local state for current query and filters */
+  let state = {
+    query: '',
+    filters: {},
+    sort: 'relevance'
+  };
+
+  const grid = document.getElementById('grid');
+  const count = document.getElementById('count');
+  const sort = document.getElementById('sort');
+
+  function matchesQuery(r, q) {
+    if (!q) return true;
+    const hay = [
+      r.title,
+      r.description,
+      r.cuisine,
+      r.course,
+      r.difficulty,
+      ...(r.tags||[]),
+      ...(r.ingredients||[]).map(i => i.item)
+    ].join(' ').toLowerCase();
+    return hay.includes(q.toLowerCase());
+  }
+
+  function matchesFilters(r, f) {
+    if (!f) return true;
+    if (f.cuisine && r.cuisine !== f.cuisine) return false;
+    if (f.course && r.course !== f.course) return false;
+    if (f.difficulty && r.difficulty !== f.difficulty) return false;
+    if (Array.isArray(f.tags) && f.tags.length) {
+      const set = new Set(r.tags || []);
+      for (const t of f.tags) {
+        if (!set.has(t)) return false;
+      }
+    }
+    return true;
+  }
+
+  function sortResults(list, mode) {
+    const arr = [...list];
+    switch (mode) {
+      case 'time-asc': return arr.sort((a,b) => a.timeMinutes - b.timeMinutes);
+      case 'time-desc': return arr.sort((a,b) => b.timeMinutes - a.timeMinutes);
+      case 'title-asc': return arr.sort((a,b) => a.title.localeCompare(b.title));
+      case 'title-desc': return arr.sort((a,b) => b.title.localeCompare(a.title));
+      default: return arr; // relevance unchanged for mock
+    }
+  }
+
+  function render(list) {
+    if (!grid) return;
+    grid.innerHTML = list.map(r => `
+      <article class="card">
+        <a class="thumb" href="/recipes/${r.id}" aria-label="Open ${r.title}">
+          <img src="${r.image}" alt="" loading="lazy" />
+          <div class="badge">${r.timeMinutes}m</div>
+        </a>
+        <div class="body">
+          <h3 class="title"><a href="/recipes/${r.id}">${r.title}</a></h3>
+          <p class="desc">${r.description}</p>
+          <div class="meta">
+            <span class="pill">${r.cuisine}</span>
+            <span class="pill">${r.course}</span>
+            <span class="pill">${r.difficulty}</span>
+          </div>
+        </div>
+      </article>
+    `).join('');
+    if (count) count.textContent = `Showing ${list.length} recipes`;
+  }
+
+  function update() {
+    const filtered = recipes.filter(r => matchesQuery(r, state.query) && matchesFilters(r, state.filters));
+    const sorted = sortResults(filtered, state.sort);
+    render(sorted);
+  }
+
+  document.addEventListener('recipe:search', (e) => {
+    state.query = e.detail?.query || '';
+    update();
+  });
+
+  document.addEventListener('recipe:filter', (e) => {
+    state.filters = e.detail || {};
+    update();
+  });
+
+  sort?.addEventListener('change', () => {
+    state.sort = sort.value;
+    update();
+  });
+
+  // initial render (SSR already rendered, but ensure sync if events fire)
+  // No-op; let SSR content stand until an interaction happens.
+</script>
